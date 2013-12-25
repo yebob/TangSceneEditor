@@ -1,0 +1,51 @@
+/**
+ *
+ * Stagnant behaviour
+ *
+ * Date: 2013/11/1
+ * Author: zzc
+ */
+using UnityEngine;
+
+
+namespace TangScene
+{
+
+  public class StagnantBhvr : MonoBehaviour
+  {
+    // 停滞时角色的速度
+    public const float STAGNANT_SPEED = 10F;
+    // 停滞持续时间
+    private float m_stagnantTime = 0;
+    // 速度备份
+    private float speedBackup = 240F;
+
+
+    // 停滞持续时间
+    public float StagnantTime
+    {
+      get
+	{
+	  return m_stagnantTime;
+	}
+      set
+	{
+	  m_stagnantTime = value;
+	  speedBackup = m_speed;
+	  speed = STAGNANT_SPEED;
+	}
+    }
+
+
+    void Start()
+    {
+      
+    }
+
+    void Update()
+    {
+      
+    }
+  }
+  
+}

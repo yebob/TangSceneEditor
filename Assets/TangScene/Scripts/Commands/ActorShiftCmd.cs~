@@ -1,0 +1,22 @@
+/**
+ * Actor shift command
+ * Date: 2013/10/31
+ * Author: zzc
+ */
+
+using PureMVC.Patterns;
+using PureMVC.Interfaces;
+
+namespace TangScene
+{
+  public class ActorShiftCmd : SimpleCommand
+  {
+    public const string NAME = "TS_INNER_ACTOR_SHIFT";
+
+    public override void Execute( INotification notification )
+    {
+      MoveBean bean = notification.Body as MoveBean;
+      
+    }
+  }
+}

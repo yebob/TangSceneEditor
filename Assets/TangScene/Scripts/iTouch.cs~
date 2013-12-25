@@ -1,0 +1,137 @@
+using UnityEngine;
+
+  
+
+#if UNITY_IPHONE
+
+//Add empty class
+public class iTouch : MonoBehaviour 
+{
+static public void ResetTouch ()
+{
+return;
+}
+}
+
+#else
+
+ 
+public class iPhoneSettings
+{
+  static public ScreenOrientation screenOrientation = ScreenOrientation.Landscape;
+  static public bool screenCanDarken = true;
+  static public string uniqueIdentifier = "PC";
+  static public string name = "PC";
+  static public string model = "PC";
+  static public string systemName = "PC";
+  static public string systemVersion = "PC";
+}
+
+
+public class iTouch : MonoBehaviour {
+ 
+  //Add no code
+  //-----------------------------------Public Variables------------------------------------
+ 
+  //-----------------------------------Private Variables-----------------------------------
+  private Vector2 pSpeed;
+  private Vector3 pLastPos;
+ 
+  //----------------------------------------Methods----------------------------------------
+  static public void ResetTouch ()
+  {
+    iInput.touches[0].phase = TouchPhase.Canceled;
+    iInput.touchCount = 0;
+  }
+ 
+  //-------------------------------------Unity Methods-------------------------------------
+  void Awake ()
+  {
+    //Setup input
+    iInput.touches = new Touch[1];
+    iInput.touches[0] = new Touch();
+    iInput.touches[0].fingerId = 0;
+    iInput.touches[0].position = (Vector2) Input.mousePosition;
+    iInput.touches[0].deltaPosition = new Vector2(0,0);
+    iInput.touches[0].tapCount = 0;
+    iInput.touches[0].phase = TouchPhase.Canceled;
+    iInput.touchCount = 0;
+    iInput.multiTouchEnabled = false;
+    iInput.orientation = iOrientation.LandscapeLeft;
+  }
+ 
+  void Update ()
+  {
+    Vector2 CurMousePos = (Vector2) Input.mousePosition;
+ 
+    switch (iInput.touches[0].phase)
+      {
+      case TouchPhase.Canceled: //Default state
+	if (Input.GetMouseButtonDown(0) == true)
+	  {
+	    //Debug.Log("Set Began");
+	    iInput.touches[0].fingerId = 0;
+	    iInput.touches[0].position = CurMousePos;
+	    iInput.touches[0].deltaPosition = new Vector2(0,0);
+	    iInput.touches[0].tapCount = 0;
+	    iInput.touches[0].phase = TouchPhase.Began;
+	    iInput.touchCount = 1;
+	  }
+	break;
+ 
+      case TouchPhase.Began:  //Mouse down
+	//Debug.Log("Set Stationary");
+	iInput.touches[0].phase = TouchPhase.Stationary;
+	break;
+ 
+      case TouchPhase.Stationary:
+	//Check for motion
+	if (iInput.touches[0].position != CurMousePos)
+	  {
+	    //Debug.Log("Set Moved");
+	    iInput.touches[0].deltaPosition.x = CurMousePos.x - iInput.touches[0].position.x;
+	    iInput.touches[0].deltaPosition.y = CurMousePos.y - iInput.touches[0].position.y;
+	    iInput.touches[0].position = CurMousePos;
+	    iInput.touches[0].phase  = TouchPhase.Moved;
+	  }
+	//Check for mouse up
+	if (Input.GetMouseButtonUp(0) == true)
+	  {
+	    //Debug.Log("Set Ended");
+	    //iInput.touches[0].timeDelta = Time.time;
+	    iInput.touches[0].phase = TouchPhase.Ended;
+	  }
+	break;
+ 
+      case TouchPhase.Moved:
+	//Check for motion
+	if (iInput.touches[0].position != CurMousePos)
+	  {
+	    iInput.touches[0].deltaPosition.x = CurMousePos.x - iInput.touches[0].position.x;
+	    iInput.touches[0].deltaPosition.y = CurMousePos.y - iInput.touches[0].position.y;
+	    iInput.touches[0].position = CurMousePos;
+	  }
+	else
+	  {
+	    //Debug.Log("Stationary");
+	    iInput.touches[0].deltaPosition = new Vector2(0, 0);
+	    iInput.touches[0].phase = TouchPhase.Stationary;
+	  }
+	//Check for mouse up
+	if (Input.GetMouseButtonUp(0) == true)
+	  {
+	    //Debug.Log("Set Ended");
+	    iInput.touches[0].phase = TouchPhase.Ended;
+	  }
+	break;
+ 
+      case TouchPhase.Ended: //mouse up
+	//Debug.Log("Set Cancelled");
+	iInput.touches[0].phase = TouchPhase.Canceled;
+	iInput.touchCount = 0;
+	break;
+      }
+  }
+}
+#endif
+

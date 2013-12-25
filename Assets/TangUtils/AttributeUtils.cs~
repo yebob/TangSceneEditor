@@ -1,0 +1,63 @@
+/**
+ * Created by emacs
+ * Date: 2013/10/15
+ * Author: zzc
+ */
+
+using System;
+using System.Collections.Generic;
+
+namespace TangUtils
+{
+
+  public class AttributeUtils
+  {
+
+    private static bool isInitialized = false;
+    // attribute type => type
+    private static Dictionary<Type, List<Type>> attributeTypeTable = new Dictionary<Type, List<Type>>();
+    
+    public static List<Type> GetTypesWith<TAttribute>( bool inherit ) where TAttribute : System.Attribute
+    {
+
+      if( !isInitialized )
+	{
+	  InitAttributeTypeTable();
+	}
+
+      Type key = typeof( TAttribute );
+      if( attributeTypeTable.ContainsKey( key ) )
+	return attributeTypeTable[key];
+      else
+	return null;
+    }
+
+
+    private static void InitAttributeTypeTable()
+    {
+      foreach( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() )
+	{
+	  foreach( Type type in assembly.GetTypes() )
+	    {
+	      Object[] attributes =  type.GetCustomAttributes( inherit );
+	      if( attributes.Length > 0 )
+		{
+		  foreach( Object attribute in attributes )
+		    {
+		      if( attributeTypeTable.ContainsKey( attribute ) )
+			{
+			  attributeTypeTable[typeof(attribute)].Add( type );
+			}
+		      else
+			{
+			  List<Type> typeList = new List<Type>();
+			  typeList.Add( type );
+			  attributeTypeTable.Add( attribute, typeList );
+			}
+		    }
+		}
+	    }
+	}
+    }
+  }
+}

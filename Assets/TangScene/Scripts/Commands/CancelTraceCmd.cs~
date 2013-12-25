@@ -1,0 +1,23 @@
+/**
+ * Cancel trace
+ *
+ * Date: 2013/10/24
+ * Author: zzc
+ */
+
+using PureMVC.Patterns;
+using PureMVC.Interfaces;
+
+namespace TangScene
+{
+  public class CancelTrace : SimpleCommand
+  {
+
+    public const string NAME = "TS_INNER_CANCEL_TRACE";
+
+    public override void Execute(INotification notification)
+    {
+      
+    }
+  }
+}

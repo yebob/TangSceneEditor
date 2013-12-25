@@ -1,0 +1,15 @@
+/**
+ * Created by emacs
+ * Date: 2013/10/21
+ * Author: zzc
+ */
+
+namespace TangUtils
+{
+
+  public class UriUtils
+  {
+    
+  }
+  
+}

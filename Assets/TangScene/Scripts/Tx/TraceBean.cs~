@@ -1,0 +1,14 @@
+/**
+ * Trace bean
+ *
+ * Date: 2013/10/24
+ * Author: zzc
+ */
+
+namespace TangScene
+{
+  public class TraceBean
+  {
+    
+  }
+}

@@ -1,0 +1,21 @@
+/**
+ * sprint behaviour
+ *
+ * Author: zzc
+ * Date: 2013/11/1
+ * Ref: SprintFollowBehaviour by HuangXiaoBo
+ */
+
+using UnityEngine;
+
+namespace TangScene
+{
+  public class SprintBhvr : MonoBehaviour
+  {
+    public GameObject targetGobj;
+    public float speed = 800F;
+    
+    
+
+  }
+}

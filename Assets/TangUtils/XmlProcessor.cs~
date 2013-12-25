@@ -1,0 +1,71 @@
+﻿/*
+ * Created by SharpDevelop.
+ * User: zzc
+ * Date: 2013/3/18
+ * Time: 18:08
+ *
+ * To change this template use Tools | Options | Coding | Edit Standard Headers.
+ */
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.IO;
+
+
+namespace TangUtils
+{
+  /// <summary>
+  /// Description of IParser.
+  /// </summary>
+  public class XmlProcessor
+  {
+    private Dictionary<string, MethodInfo> callbackMap = new Dictionary<string, MethodInfo>();
+    private static readonly object m_syncObj = new object();
+    private static XmlProcessor m_instance = null;
+
+    public static XmlProcessor Instance
+    {
+      get
+	{
+	  lock(m_syncObj)
+	    {
+	      if( m_instance == null )
+		{
+		  m_instance = new XmlProcessor();
+		}
+	      return m_instance;
+	    }
+	}
+    }
+    
+    private XmlProcessor()
+    {
+      List<Type> typeList = AttributeUtils.GetTypesWith<XmlProcessAttribute>( true );
+      if( typeList != null )
+	foreach( Type type in typeList )
+	  RegisterXmlProcess(type);
+    }
+
+    private void RegisterXmlProcess(Type type)
+    {
+      object[] objs = type.GetCustomAttributes( true );
+      foreach( object attribute in objs )
+	{
+	  callbackMap[ ((XmlProcessAttribute) attribute).GetName() ] = type.GetMethod("Process", new Type[] { typeof(byte[]) } );
+	}
+    }
+
+    public object Process(string name, byte[] bytes )
+    {
+      MethodInfo methodInfo = callbackMap[name] as MethodInfo;
+      if( methodInfo != null )
+	{
+	  return methodInfo.Invoke( null, new byte[][]{bytes} ) as object;
+	}
+      else
+	return null;
+    }
+
+    
+  }
+}

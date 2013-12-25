@@ -1,0 +1,53 @@
+/**
+ *
+ * highlight behaviour
+ *
+ * Date: 2013/10/28
+ * Author: zzc
+ */
+using UnityEngine;
+
+namespace TangScene
+{
+  public class HighlightBhvr : MonoBehaviour
+  {
+
+    public const float ATTENUATION_TIME = 1F;
+    public const int MAX_LEVEL = 10;
+
+    private float remainTime = ATTENUATION_TIME;
+    private int lastLevel = MAX_LEVEL;
+
+    private SpriteAnimate spriteAnimate = null;
+
+    void Update()
+    {
+
+      remainTime -= Time.deltaTime;
+      if( remainTime >= 1 )
+	{
+	  int level = (int) (ATTENUATION_TIME / remainTime) ;
+	  if( lastLevel > level )
+	    {
+	      spriteAnimate.ChangeSpecularLevel(level);
+	      lastLevel = level;
+	    }
+	}
+      else
+	{
+	  spriteAnimate.RevertSpecular();
+	}
+      
+    }
+
+    void OnEnable()
+    {
+      if( spriteAnimate == null )
+	spriteAnimate = GetComponent<SpriteAnimate>();
+
+      remainTime = ATTENUATION_TIME;
+      lastLevel = MAX_LEVEL;
+
+    }
+  }
+}
